@@ -1,10 +1,12 @@
 # jev-ego
 
-A browser agent with a dynamic, indexed action space, running inside [ego lite](https://lite.ego.app/).
+TypeScript **browser agent** for [ego lite](https://lite.ego.app/) — [Jev Ultrafast](https://github.com/browser-use/jev-ultrafast)'s indexed action space, without Chrome, Playwright, or Browser Harness.
 
-Give it one goal. An agent (or [TypeSafe's Jev](https://docs.typesafe.ai/introduction)) picks an operation and an element. A small LLM writes text only when Jev chooses `TYPE_TEXT`; an agent-chosen `TYPE_TEXT` takes the string you pass.
+Give it one natural-language goal. A coding agent (or [TypeSafe Jev](https://docs.typesafe.ai/introduction)) picks `CLICK` / `TYPE_TEXT` / `SELECT` on a numbered element table. The whole loop — TypeSafe, the text helper, and CDP — runs inside one `ego-browser nodejs` process.
 
-This is a TypeScript port of [browser-use/jev-ultrafast](https://github.com/browser-use/jev-ultrafast). The policy is the same. The browser layer is ego lite instead of Chrome via Browser Harness, and the whole loop runs in one `ego-browser nodejs` process.
+**Who it's for.** Every local agent and harness on this machine. Default browser is ego lite through `jev-ego`. Not a general web-automation SDK; uploads, tabs, dialogs, canvas, shadow DOM, and iframes stay on the [ego-browser](https://lite.ego.app/) skill.
+
+The policy matches [browser-use/jev-ultrafast](https://github.com/browser-use/jev-ultrafast). The browser layer is ego lite. An agent can drive the page itself (`observe` / `act`) or ask Jev for ranked directions (`suggest` / `step`).
 
 ## The action space
 
@@ -48,6 +50,19 @@ Target questions are speculative. If the operation is `CLICK`, only `click_targe
 Agents should prefer the **stepper**: `serve` keeps one TaskSpace and page session in a loopback daemon so `observe` / `act` / `suggest` / `step` skip ego process startup. See [`skills/jev-ego/SKILL.md`](skills/jev-ego/SKILL.md).
 
 Read the loop in [`src/agent.ts`](src/agent.ts) and the daemon in [`docs/design.md`](docs/design.md).
+
+## Commands
+
+| Command | What it does |
+| --- | --- |
+| `jev-ego serve --url URL` | Start the loopback daemon on one ego lite TaskSpace |
+| `jev-ego observe` | Print the indexed accessibility table |
+| `jev-ego act OP [TARGET] [TEXT]` | Agent-chosen `CLICK`, `TYPE_TEXT`, `SELECT`, scroll, or wait |
+| `jev-ego suggest` | One TypeSafe request: ranked directions, no click |
+| `jev-ego step` | One Jev decision and execution |
+| `jev-ego run --goal TEXT` | Bounded autopilot on the open space or a fresh URL |
+| `jev-ego flights` / `smoke` / `probe` | Google Flights demo, local hotel fixture, CDP-count probe |
+| `jev-ego stop` | Finish the TaskSpace and remove the registry file |
 
 ## Requirements
 
@@ -135,6 +150,12 @@ On ego lite 0.5.0.32, a first snapshot after navigation is **3 CDP calls** (view
 The stepper daemon keeps that page: `observe` was 0.11 s after the `serve` client exited; `act TYPE_TEXT` / `SELECT` / `CLICK` on the hotel fixture were 0.17–0.27 s. `jev-ego flights` (space 25) finished in 31.6 s wall / 29.1 s decision clock — 11 actions, 15 TypeSafe decisions, 2 text-helper calls, 60 CDP — and passed the independent route/date/results checks. Numbers and the fixture directions table live in [`docs/performance.md`](docs/performance.md). Do not treat the upstream 7.1 s Chrome number as a jev-ego result.
 
 A `DONE` choice still requires independent outcome verification. The DOM reader handles common HTML and ARIA controls, not the full accessible-name specification. Shadow roots, frames, canvas, uploads, pop-up tabs, nested scrolling, and arbitrary keyboard widgets remain outside this MVP.
+
+## Related
+
+- [browser-use/jev-ultrafast](https://github.com/browser-use/jev-ultrafast) — same policy, Chrome via Browser Harness
+- [TypeSafe Jev](https://docs.typesafe.ai/introduction) — operation + target in one request
+- [ego lite](https://lite.ego.app/) — the Chromium the agent actually drives
 
 ## License
 
