@@ -17,6 +17,14 @@
   ],
   "type": "module",
   "license": "MIT",
+  "homepage": "https://github.com/romaluev/jev-ego",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/romaluev/jev-ego.git"
+  },
+  "bugs": {
+    "url": "https://github.com/romaluev/jev-ego/issues"
+  },
   "bin": {
     "jev-ego": "./bin/jev-ego.mjs"
   },
