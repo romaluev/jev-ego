@@ -13,8 +13,7 @@ const dist = join(root, "dist", "jev-ego.mjs");
 const ONESHOT = new Set(["flights", "smoke", "probe"]);
 const DAEMON = new Set(["observe", "act", "suggest", "step", "goto", "spaces", "stop"]);
 
-function loadEnv() {
-  const path = join(process.cwd(), ".env");
+function applyEnvFile(path) {
   if (!existsSync(path)) {
     return;
   }
@@ -29,6 +28,19 @@ function loadEnv() {
       process.env[key] = value;
     }
   }
+}
+
+function resolveEnvPath() {
+  const cwdEnv = join(process.cwd(), ".env");
+  if (existsSync(cwdEnv)) {
+    return cwdEnv;
+  }
+  return join(root, ".env");
+}
+
+function loadEnv() {
+  applyEnvFile(join(process.cwd(), ".env"));
+  applyEnvFile(join(root, ".env"));
 }
 
 function printHelp() {
@@ -156,7 +168,7 @@ function runEgo(args) {
     console.error("Missing dist/jev-ego.mjs. Run `pnpm build` first.");
     process.exit(1);
   }
-  args.envPath = args.envPath ?? join(process.cwd(), ".env");
+  args.envPath = args.envPath ?? resolveEnvPath();
   return new Promise((resolvePromise) => {
     const child = spawn("ego-browser", ["nodejs"], {
       stdio: ["pipe", "inherit", "inherit"],
@@ -185,7 +197,7 @@ async function spawnDaemon(args) {
     profileId: args.profileId,
     registryDir: dir,
     serveToken,
-    envPath: join(process.cwd(), ".env"),
+    envPath: resolveEnvPath(),
   };
   const child = spawn("ego-browser", ["nodejs"], {
     stdio: ["pipe", "ignore", "ignore"],

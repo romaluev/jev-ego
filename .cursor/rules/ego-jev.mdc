@@ -1,0 +1,8 @@
+---
+description: Default browser is ego lite through jev-ego
+alwaysApply: true
+---
+
+# Default browser: ego lite + jev-ego
+
+Do not add Playwright, Puppeteer, Chrome, or a second browser. Agents drive pages with `jev-ego` (`serve` / `observe` / `act` / `suggest` / `step`). Raw `ego-browser` is only for uploads, tabs, dialogs, canvas, shadow DOM, and iframes.

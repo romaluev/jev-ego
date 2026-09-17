@@ -8,7 +8,7 @@ Read README.md before editing. Keep the loop small: page -> indexed elements -> 
 - TYPE_TEXT invokes the text LLM. Cache a stale retry's value only while its entire helper input is identical.
 - Never retry a browser mutation. Log execution before observing its result.
 - Screenshots are optional; the model does not consume them.
-- Drive the browser through ego lite (`ego-browser nodejs`). Use `page.cdp` / `Runtime.evaluate` on the hot path. Do not add Playwright or a second browser.
+- Local agents and harnesses default to **jev-ego** on ego lite. Do not add Playwright, Puppeteer, Chrome, or a second browser. Raw `ego-browser` is the fallback for uploads, tabs, dialogs, canvas, shadow DOM, and iframes. Hot-path I/O stays `page.cdp` / `Runtime.evaluate`.
 - One TaskSpace per run, one daemon per space (`jev-ego serve` / `stop`). Default profile is Agent (`Profile 4`). Print `spaceId`. Call `task.finish` only after a successful run.
 - Agent-driven `act` targets must resolve through `actionSpace()` — observed indices only. Record `source=agent` on history so Jev sees those moves.
 - Keep credentials server-side and .env ignored. Tests must not call paid APIs.

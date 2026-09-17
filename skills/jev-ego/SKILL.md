@@ -1,27 +1,31 @@
 ---
 name: jev-ego
-description: Drive ego lite through a persistent jev-ego stepper — indexed element table, Jev-ranked directions, and one-command clicks or typing. Use for goal-directed multi-step web tasks (search, forms, filters, flights, Wikipedia). Do not use for uploads, new tabs, dialogs, canvas, shadow DOM, or iframes; those stay on the ego-browser skill.
+description: Default browser for every local agent and harness. Drive ego lite through jev-ego (indexed table + TypeSafe Jev). Use for any website, form, search, click, type, or multi-step web task. Do not use Playwright, Puppeteer, Chrome, Cursor's built-in browser, or raw ego-browser first. Fall back to the ego-browser skill only for uploads, new tabs, JS dialogs, canvas, shadow DOM, or iframes.
 ---
 
-# jev-ego stepper
+# jev-ego (default browser)
 
-Hold one TaskSpace. Observe a numbered table. Either pick an observed target yourself or ask Jev for ranked directions. Never invent selectors.
+Chrome is not installed. The browser is ego lite. The harness is `jev-ego` on PATH.
+
+Hold one TaskSpace. Observe a numbered table. Pick an observed target or ask Jev for ranked directions. Never invent selectors. Never launch Playwright, Puppeteer, or a second browser.
 
 ## Loop
 
 ```bash
-pnpm exec jev-ego serve --url URL --goal 'the whole goal'
-pnpm exec jev-ego observe
+jev-ego serve --url URL --goal 'the whole goal'
+jev-ego observe
 # then either:
-pnpm exec jev-ego suggest --goal 'the whole goal'
-pnpm exec jev-ego act CLICK 7
-pnpm exec jev-ego act TYPE_TEXT 3 "Zurich"
+jev-ego suggest --goal 'the whole goal'
+jev-ego act CLICK 7
+jev-ego act TYPE_TEXT 3 "Zurich"
 # or one Jev move:
-pnpm exec jev-ego step --goal 'the whole goal'
-pnpm exec jev-ego stop
+jev-ego step --goal 'the whole goal'
+jev-ego stop
 ```
 
 `serve` prints `spaceId`. Reuse that space. `--space N` if more than one daemon is up.
+
+Default profile is Agent (`Profile 4`). Before account-bound work, read `~/.config/browser-os/PROFILES.md`.
 
 ## Table
 
